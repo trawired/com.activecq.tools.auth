@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0" localization="OSGI-INF/metatype/metatype">
+    <OCD id="com.activecq.tools.auth.impl.CookieAuthenticationImpl" name="ActiveCQ - HTTP Cookie Authenticator" description="%com.activecq.tools.auth.impl.CookieAuthenticationImpl.description">
+        <AD id="service.uid" type="String" default="default" name="Service Unique ID" description="Must be unique between other Configurations. Must be the same between all servers"/>
+        <AD id="service.ranking" type="Integer" default="20" name="Service Ranking" description="Service ranking. Higher gives more priority."/>
+        <AD id="prop.token.name" type="String" default="auth" name="Cookie Name" description="Must be the same between all servers"/>
+        <AD id="prop.token.secret" type="String" default="CHANGE_ME_BUT_KEEP_ME_THE_SAME_BETWEEN_SERVERS" name="Cookie Secret" description="Must be the same between all servers. A UUID is a good secret. Changing this value will invalidate previously issued Auth Cookies."/>
+        <AD id="prop.session.expiry" type="Integer" default="-1" name="Default Cookie Life" description="Default cookie expiry in seconds, used if 'Remember Me' expirty isn't set. Defaults to -1 to indicate a Session cookie."/>
+        <AD id="prop.session.remember-me" type="String" default="remember-me:on" name="Remember Me" description="Request Parameter key:value pair to watch for."/>
+        <AD id="prop.session.remember-me.expiry" type="Long" default="-1" name="Remember Me Cookie Life" description="Cookie expiry in days"/>
+        <AD id="prop.encryption.algorithm" type="String" default="HmacSHA1" name="Encryption Algorithm" description="Encryption algorithm used to hash secure cookie. Must be the same between all servers">
+            <Option value="HMAC-SHA1" label="HmacSHA1"/>
+            <Option value="HMAC-MD5" label="HmacMD5"/>
+        </AD>
+        <AD id="prop.cookie.path" type="String" default="/" name="Cookie Path" description="Cookie Path"/>
+        <AD id="prop.cookie.drop-regexes" type="String" name="Drop Cookies" description="Drop Cookies" cardinality="100000"/>
+        <AD id="prop.cookie.encoding" type="String" default="UTF-8" name="Cookie Encoding" description="Cookie character encoding (Default: UTF-8)"/>
+    </OCD>
+    <OCD id="com.activecq.tools.auth.impl.FormAuthenticationImpl" name="ActiveCQ - Form Credentials Authentication" description="%com.activecq.tools.auth.impl.FormAuthenticationImpl.description">
+        <AD id="service.uid" type="String" default="default" name="Service Unique ID" description="Must be unique between other Configurations. Must be the same between all servers"/>
+        <AD id="service.ranking" type="Integer" default="20" name="Service Ranking" description="Service ranking. Higher gives more priority."/>
+        <AD id="prop.suffixes" type="String" default="j_security_check" name="URI Suffix" description="URI Suffixes to process as Credential Authentication requests" cardinality="100"/>
+    </OCD>
+    <OCD id="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl" name="ActiveCQ - Pluggable Authentication Handler" description="This service provides an extensible framework for Form and Session authentication.">
+        <AD id="prop.enabled" type="Boolean" default="false" name="Enable" description="Enable/disable this authentication handler"/>
+        <AD id="path" type="String" default="/" name="Authentication Paths" description="JCR Paths which this Authentication Handler will authenticate. [Default: /]" cardinality="2147483647"/>
+        <AD id="service.ranking" type="Integer" default="20" name="Service Ranking" description="Service ranking. Higher gives more priority."/>
+        <AD id="sessionAuthenticationService.target" type="String" default="(service.uid=default)" name="Session Authentication Service ID" description="Filter expression for selecting the implemenation of the SessionAuthenticationService. Example: (service.id=default)"/>
+        <AD id="formAuthenticationService.target" type="String" default="(service.uid=default)" name="Form Authentication Service ID" description="Filter expression for selecting the implemenation of the FormAuthenticationService. Example: (service.id=default)"/>
+        <AD id="prop.trust-credentials" type="String" default="TrustedInfo" name="Trust Credentials" description="The CQ Trust Credentials found in repository.xml or ldap.config"/>
+        <AD id="prop.request-credentials.redirect" type="String" default="/sign-in.html" name="Request Credentials Redirect URI" description="requestCredentials(..) will redirect to this page when the appropriate conditions are met. Leave blank to return false;"/>
+    </OCD>
+    <Designate pid="com.activecq.tools.auth.impl.CookieAuthenticationImpl" factoryPid="com.activecq.tools.auth.impl.CookieAuthenticationImpl">
+        <Object ocdref="com.activecq.tools.auth.impl.CookieAuthenticationImpl"/>
+    </Designate>
+    <Designate pid="com.activecq.tools.auth.impl.FormAuthenticationImpl" factoryPid="com.activecq.tools.auth.impl.FormAuthenticationImpl">
+        <Object ocdref="com.activecq.tools.auth.impl.FormAuthenticationImpl"/>
+    </Designate>
+    <Designate pid="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl" factoryPid="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl">
+        <Object ocdref="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl"/>
+    </Designate>
+</metatype:MetaData>

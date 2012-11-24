@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.0.0">
+    <scr:component enabled="true" immediate="true" name="com.activecq.tools.auth.impl.CookieAuthenticationImpl">
+        <implementation class="com.activecq.tools.auth.impl.CookieAuthenticationImpl"/>
+        <service servicefactory="false">
+            <provide interface="com.activecq.tools.auth.SessionAuthenticationService"/>
+            <provide interface="com.activecq.tools.auth.PluggableAuthenticationHandler"/>
+        </service>
+        <property name="service.uid" type="String" value="default"/>
+        <property name="service.ranking" type="Integer" value="20"/>
+        <property name="service.vendor" type="String" value="ActiveCQ"/>
+        <property name="prop.token.name" type="String" value="auth"/>
+        <property name="prop.token.secret" type="String" value="CHANGE_ME_BUT_KEEP_ME_THE_SAME_BETWEEN_SERVERS"/>
+        <property name="prop.session.expiry" type="Integer" value="-1"/>
+        <property name="prop.session.remember-me" type="String" value="remember-me:on"/>
+        <property name="prop.session.remember-me.expiry" type="Long" value="-1"/>
+        <property name="prop.encryption.algorithm" type="String" value="HmacSHA1"/>
+        <property name="prop.cookie.path" type="String" value="/"/>
+        <property name="prop.cookie.drop-regexes"/>
+        <property name="prop.cookie.encoding" type="String" value="UTF-8"/>
+        <property name="service.pid" value="com.activecq.tools.auth.impl.CookieAuthenticationImpl"/>
+    </scr:component>
+    <scr:component enabled="true" immediate="true" name="com.activecq.tools.auth.impl.FormAuthenticationImpl">
+        <implementation class="com.activecq.tools.auth.impl.FormAuthenticationImpl"/>
+        <service servicefactory="false">
+            <provide interface="com.activecq.tools.auth.CredentialsAuthenticationService"/>
+            <provide interface="com.activecq.tools.auth.PluggableAuthenticationHandler"/>
+        </service>
+        <property name="service.uid" type="String" value="default"/>
+        <property name="service.ranking" type="Integer" value="20"/>
+        <property name="service.vendor" type="String" value="ActiveCQ"/>
+        <property name="prop.suffixes" type="String" value="j_security_check"/>
+        <property name="service.pid" value="com.activecq.tools.auth.impl.FormAuthenticationImpl"/>
+    </scr:component>
+    <scr:component enabled="true" immediate="true" name="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl">
+        <implementation class="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl"/>
+        <service servicefactory="false">
+            <provide interface="org.apache.sling.auth.core.spi.AuthenticationHandler"/>
+            <provide interface="org.apache.sling.auth.core.spi.AuthenticationFeedbackHandler"/>
+        </service>
+        <property name="prop.enabled" type="Boolean" value="false"/>
+        <property name="service.description" type="String" value="ActiveCQ Pluggable Authentication Handler"/>
+        <property name="path" type="String" value="/"/>
+        <property name="service.ranking" type="Integer" value="20"/>
+        <property name="sessionAuthenticationService.target" type="String" value="(service.uid=default)"/>
+        <property name="formAuthenticationService.target" type="String" value="(service.uid=default)"/>
+        <property name="authtype" type="String" value="FORM"/>
+        <property name="service.vendor" type="String" value="ActiveCQ"/>
+        <property name="prop.trust-credentials" type="String" value="TrustedInfo"/>
+        <property name="prop.request-credentials.redirect" type="String" value="/sign-in.html"/>
+        <property name="service.pid" value="com.activecq.tools.auth.impl.PluggableAuthenticationHandlerImpl"/>
+        <reference name="sessionAuthenticationService" interface="com.activecq.tools.auth.SessionAuthenticationService" cardinality="1..1" policy="static" target="(service.uid=default)" bind="bindSessionAuthenticationService" unbind="unbindSessionAuthenticationService"/>
+        <reference name="formAuthenticationService" interface="com.activecq.tools.auth.CredentialsAuthenticationService" cardinality="1..1" policy="static" target="(service.uid=default)" bind="bindFormAuthenticationService" unbind="unbindFormAuthenticationService"/>
+        <reference name="resourceResolverFactory" interface="org.apache.sling.api.resource.ResourceResolverFactory" cardinality="1..1" policy="static" bind="bindResourceResolverFactory" unbind="unbindResourceResolverFactory"/>
+    </scr:component>
+</components>

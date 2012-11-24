@@ -1,0 +1,29 @@
+# osx noise
+.DS_Store
+profile
+
+# SCM
+.svn
+.git
+CVS
+
+# Java
+.classpath
+*/.settings/*
+.settings/
+.project
+*.prefs
+*.class
+*.jar
+*.zip
+target/
+
+# Netbeans
+nbactions*
+nb-configuration.xml
+settings.xml
+
+#Vault
+.vlt*
+
+

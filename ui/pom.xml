@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.activecq.tools.auth</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <name>ActiveCQ - Auth Handler (UI)</name>
+    <description>Adobe CQ presentation-based scripts and resources.</description>
+    <artifactId>ui</artifactId>
+    <packaging>content-package</packaging>
+
+    <build>
+        <resources>
+            <!-- Content package definition files -->
+            <resource>
+                <directory>${basedir}/src/main/content/META-INF</directory>
+                <targetPath>${basedir}/target/vault-work/META-INF</targetPath>
+            </resource>
+
+            <!-- Clean unwanted files and folders from Vault package -->
+			<resource>
+				<directory>${basedir}/src/main/content/jcr_root</directory>
+				<targetPath>${basedir}/target/vault-work/jcr_root</targetPath>
+				<filtering>false</filtering>
+				<includes>
+					<include>**</include>
+                </includes>
+                <excludes>
+					<exclude>libs/**</exclude>
+					<exclude>**/.svn</exclude>
+                    <exclude>**/.git</exclude>
+                    <exclude>**/.gitignore</exclude>
+					<exclude>**/.vlt</exclude>
+					<exclude>**/.vltignore</exclude>
+					<exclude>**/.vlt-sync-config.properties</exclude>
+					<exclude>**/.vlt-sync.log</exclude>
+                    <exclude>**/.DS_Store</exclude>
+                    <exclude>**/Thumbs.db</exclude>
+				</excludes>
+			</resource>
+        </resources>
+
+        <plugins>
+            <!-- Precompile JSPs for compilation checks -->
+            <plugin>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>maven-jspc-plugin</artifactId>
+                <version>2.0.6</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/main/content/jcr_root</sourceDirectory>
+                    <compilerSourceVM>1.5</compilerSourceVM>
+                    <compilerTargetVM>1.5</compilerTargetVM>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-jsp</id>
+                        <goals>
+                            <goal>jspc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+                <version>0.0.14</version>
+                <extensions>true</extensions>
+
+                <configuration>
+                    <verbose>true</verbose>
+
+                    <!-- Content package naming properties -->
+                    <finalName>${project.groupId}-${project.version}</finalName>
+                    <group>${project.organization.name}</group>
+                    <name>${project.groupId}</name>
+                    <version>${project.version}</version>
+
+                    <description>${project.parent.description}</description>
+
+                    <failOnError>true</failOnError>
+                              
+                    <filterSource>${basedir}/src/main/content/META-INF/vault/filter.xml</filterSource>
+
+                    <failOnMissingEmbed>false</failOnMissingEmbed>
+                    <builtContentDirectory>vault-work</builtContentDirectory>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>package</goal>
+                            <goal>install</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <finalName>${project.groupId}-${project.version}</finalName>
+    </build>
+
+    <dependencies>
+        <!-- Core -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- JavaX -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
+
+        <!-- JCR -->
+        <dependency>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
+        </dependency>
+
+        <!-- Jackrabbit -->
+        <dependency>
+            <groupId>org.apache.jackrabbit</groupId>
+            <artifactId>jackrabbit-jcr-commons</artifactId>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- Sling -->
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.api</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.jcr.resource</artifactId>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- Apache Felix OSGi -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.annotations</artifactId>
+        </dependency>
+
+        <!-- Sling -->
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.jcr.api</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.jsp</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.jsp.taglib</artifactId>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- Adobe CQ -->
+        <dependency>
+            <groupId>com.day.cq</groupId>
+            <artifactId>cq-commons</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.dam</groupId>
+            <artifactId>cq-dam-api</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-api</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-commons</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-foundation</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-taglib</artifactId>
+            <type>bundle</type>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.granite</groupId>
+            <artifactId>com.adobe.granite.xssprotection</artifactId>
+            <type>bundle</type>
+        </dependency>
+
+        <!-- Misc -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+    </dependencies>
+</project>
