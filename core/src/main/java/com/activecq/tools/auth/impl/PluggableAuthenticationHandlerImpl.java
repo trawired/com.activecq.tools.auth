@@ -52,16 +52,16 @@ import org.slf4j.LoggerFactory;
         configurationFactory=true)
 
 @Properties ({
-    @Property(label="Enable",
-            description="Enable/disable this authentication handler",
-            name="prop.enabled",
-            boolValue=false,
-            propertyPrivate=false),
-
     @Property(label="Friendly Name",
             description="Friendly name for this Authentication Handler configuration",
             name="service.description",
             value="ActiveCQ Pluggable Authentication Handler",
+            propertyPrivate=false),
+
+    @Property(label="Enable",
+            description="Enable/disable this authentication handler",
+            name="prop.enabled",
+            boolValue=false,
             propertyPrivate=false),
 
     @Property(label="Authentication Paths",
@@ -176,6 +176,7 @@ public class PluggableAuthenticationHandlerImpl implements AuthenticationHandler
             return null;
         }
 
+        // Handle SimpleCredentials (Default CQ behavior, vs Custom Credentials)
         AuthenticationInfo info;
 
         if(credentials instanceof SimpleCredentials) {
@@ -196,14 +197,15 @@ public class PluggableAuthenticationHandlerImpl implements AuthenticationHandler
             if(simpleCredentials.getPassword() != null && simpleCredentials.getPassword().length > 0) {
                 info.setPassword(simpleCredentials.getPassword());
             }
-
-            info.put(JcrResourceConstants.AUTHENTICATION_INFO_CREDENTIALS, simpleCredentials);
         } else {
             // Handle the case where Authentication should be preformed against a
             // custom LoginModulePlugin (http://sling.apache.org/apidocs/sling6/org/apache/sling/jcr/jackrabbit/server/security/LoginModulePlugin.html)
             info = new AuthenticationInfo(HttpServletRequest.FORM_AUTH);
-            info.put(JcrResourceConstants.AUTHENTICATION_INFO_CREDENTIALS, credentials);
         }
+
+        // Add the Credentials object to the AuthenticationInfo for processing by
+        // the LoginModule/LoginModulePlugin
+        info.put(JcrResourceConstants.AUTHENTICATION_INFO_CREDENTIALS, credentials);
 
         return info;
     }

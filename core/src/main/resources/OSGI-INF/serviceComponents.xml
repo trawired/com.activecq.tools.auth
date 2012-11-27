@@ -38,8 +38,8 @@
             <provide interface="org.apache.sling.auth.core.spi.AuthenticationHandler"/>
             <provide interface="org.apache.sling.auth.core.spi.AuthenticationFeedbackHandler"/>
         </service>
-        <property name="prop.enabled" type="Boolean" value="false"/>
         <property name="service.description" type="String" value="ActiveCQ Pluggable Authentication Handler"/>
+        <property name="prop.enabled" type="Boolean" value="false"/>
         <property name="path" type="String" value="/"/>
         <property name="service.ranking" type="Integer" value="20"/>
         <property name="sessionAuthenticationService.target" type="String" value="(service.uid=default)"/>

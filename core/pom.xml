@@ -106,8 +106,9 @@
                         <Embed-StripGroup>true</Embed-StripGroup>
 
                         <Export-Package>
-                            ${project.groupId}.*;version=${project.version}
+                            !${project.groupId}.impl.*,${project.groupId}.*;version=${project.version}
                         </Export-Package>
+
                     </instructions>
                 </configuration>
             </plugin>
